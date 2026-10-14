@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+<div class="page-head">
+  <div>
+    <h1>Orders</h1>
+    <p class="subtitle"><%= currentUser.role === 'admin' ? 'All orders in the system' : 'Your orders' %></p>
+  </div>
+  <a class="btn btn-primary" id="create-order-btn" href="/create-order">+ New order</a>
+</div>
+
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Date</th>
+        <th>Total</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (orders.length === 0) { %>
+        <tr><td colspan="6" class="empty">No orders found</td></tr>
+      <% } %>
+      <% orders.forEach(order => { %>
+        <tr>
+          <td><%= order.customerName %></td>
+          <td><%= order.productName %></td>
+          <td><%= order.quantity %></td>
+          <td><%= new Date(order.orderDate).toLocaleDateString("en-GB") %></td>
+          <td class="price"><%= order.totalPrice.toLocaleString("vi-VN") %> VND</td>
+          <td>
+            <% if (canManage(order)) { %>
+              <div class="actions">
+                <a class="btn btn-edit" href="/orders/<%= order._id %>/edit">Edit</a>
+                <form action="/orders/<%= order._id %>/delete" method="POST" onsubmit="return confirm('Delete this order?')">
+                  <button class="btn btn-delete" type="submit">Delete</button>
+                </form>
+              </div>
+            <% } else { %>
+              <span class="lock">Read only</span>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('partials/footer') %>

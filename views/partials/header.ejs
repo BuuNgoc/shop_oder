@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Order management system with secure login and role-based access.">
+  <title><%= typeof title !== 'undefined' ? title + ' · ' : '' %>OrderHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/orders"><span class="brand-dot"></span>OrderHub</a>
+    <div class="nav-links">
+      <% if (currentUser) { %>
+        <a class="nav-link" href="/orders" id="nav-orders">Orders</a>
+        <a class="nav-link" href="/create-order" id="nav-create">New order</a>
+        <% if (currentUser.role === 'admin') { %>
+          <a class="nav-link" href="/admin/users" id="nav-users">Users</a>
+        <% } %>
+        <div class="user-chip">
+          <span><%= currentUser.username %></span>
+          <span class="badge badge-<%= currentUser.role %>"><%= currentUser.role %></span>
+          <form class="logout-form" action="/logout" method="POST">
+            <button class="btn btn-ghost" id="logout-btn" type="submit" style="padding:6px 12px;">Logout</button>
+          </form>
+        </div>
+      <% } else { %>
+        <a class="nav-link" href="/login" id="nav-login">Sign in</a>
+        <a class="nav-link" href="/register" id="nav-register">Register</a>
+      <% } %>
+    </div>
+  </nav>
+  <main class="container">
+    <% if (flash) { %>
+      <div class="alert alert-<%= flash.type %>"><%= flash.message %></div>
+    <% } %>
